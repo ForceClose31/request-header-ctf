@@ -34,18 +34,21 @@ for line in mappings:
         operator = match.group(2).strip()
         replacements[symbol] = operator
 
-translated_expression = expression
-for symbol, operator in replacements.items():
-    translated_expression = translated_expression.replace(symbol, operator)
+tokens = expression.strip().split()
+translated_tokens = [replacements.get(token, token) for token in tokens]
+translated_expression = " ".join(translated_tokens)
 
 print(f"Ekspresi setelah diterjemahkan: {translated_expression}")
 
 try:
     answer = eval(translated_expression)
-    if answer == int(answer):
-        formatted_answer = str(int(answer)) 
+    if isinstance(answer, float):
+        if round(answer, 2) == round(answer, 1):
+            formatted_answer = f"{answer:.1f}"
+        else:
+            formatted_answer = f"{answer:.2f}"
     else:
-        formatted_answer = f"{answer:.2f}"  
+        formatted_answer = str(answer)
 except Exception as e:
     print(f"Gagal menghitung jawaban: {e}")
     client_socket.close()
